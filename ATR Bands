@@ -1,0 +1,28 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © monauro
+//@version=5
+
+indicator('MR_ATR Bands', overlay=true)
+
+TF = input.timeframe('D', 'Timeframe')
+
+length = input(14, title='ATR Length')
+multiplier = input(1.0, title='ATR Multiplier')
+
+daily_atr = request.security(syminfo.tickerid, TF, ta.atr(length))
+daily_close = request.security(syminfo.tickerid, TF, close)
+upper_band = daily_close[1] + multiplier * daily_atr[1]
+lower_band = daily_close[1] - multiplier * daily_atr[1]
+middle_band = (upper_band + lower_band)/2
+
+plot(upper_band, color=color.new(color.yellow, 50))
+plot(lower_band, color=color.new(color.yellow, 50))
+plot(middle_band, color=color.new(color.gray, 30))
+
+if barstate.islast
+    line.new(bar_index, upper_band, bar_index+10, upper_band,color=color.new(color.yellow,0))
+    line.new(bar_index, lower_band,bar_index+10, lower_band,color=color.new(color.yellow,0))
+    mid_line = line.new(bar_index, middle_band, bar_index+10, middle_band, color=color.new(color.orange,0))
+    line.set_style(mid_line, line.style_dashed)
+    label.new(bar_index+5, upper_band, text = str.tostring(math.round(upper_band,2)), color=color.new(color.yellow,0))
+    label.new(bar_index+5, lower_band, text = str.tostring(math.round(lower_band,2)), color=color.new(color.yellow,0))
