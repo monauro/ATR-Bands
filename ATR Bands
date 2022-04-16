@@ -2,6 +2,8 @@
 // © monauro
 //@version=5
 
+// This indicator adds ATR channels to the price chart
+
 indicator('MR_ATR Bands', overlay=true)
 
 TF = input.timeframe('D', 'Timeframe')
